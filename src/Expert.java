@@ -1,17 +1,18 @@
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Expert implements Comparable<Expert>{
 
-    private final int id;
+    private final String id;
     private final int serialNumber;
     private static int counter = 0;
     private boolean isLeader;
     private Set<Skill> skills = new HashSet<Skill>();
     private Set<Skill> relevantSkills = null;
 
-    public Expert(int id) {
+    public Expert(String id) {
         this.id = id;
         serialNumber = counter;
         counter ++;
@@ -35,6 +36,11 @@ public class Expert implements Comparable<Expert>{
         return expert.getSerialNumber() - this.getSerialNumber();
     }
 
+    @Override
+    public String toString() {
+        return this.id;
+    }
+
     public Set<Skill> getRelevantSkills() {
         if(relevantSkills == null){
             relevantSkills = new HashSet<Skill>(skills);
@@ -48,5 +54,10 @@ public class Expert implements Comparable<Expert>{
 
     public void addSkill(Skill skill) {
         skills.add(skill);
+    }
+
+    public void addSkills(Skill[] skills) {
+        Set<Skill> skillsAsSet = new HashSet<Skill>(Arrays.asList(skills));
+        this.skills.addAll(skillsAsSet);
     }
 }

@@ -42,11 +42,12 @@ public class RunExperiment {
     private static Expert selectExpertThatMinimizedCost() {
         Expert selectedExpert = null;
         double lowestCost = Double.POSITIVE_INFINITY;
+        Set<Expert> unrelevantExperts = new HashSet<Expert>();
         for(Expert expert : availableExperts){
             double communicationCostWithLeader = getCommunicationCostWithLeader(expert);
             int numOfRelevantSkills = getNumOfRelevantSkills(expert);
             if(numOfRelevantSkills == 0){
-                availableExperts.remove(expert); //this expert in no more relevant
+                unrelevantExperts.add(expert); //this expert in no more relevant
                 continue;
             }
             double cost = communicationCostWithLeader / numOfRelevantSkills;
@@ -55,6 +56,7 @@ public class RunExperiment {
                 lowestCost = cost;
             }
         }
+        availableExperts.removeAll(unrelevantExperts);
         return selectedExpert;
     }
 
@@ -92,25 +94,35 @@ public class RunExperiment {
     }
 
     private static void initData() {
-        Expert e1 = new Expert(1);
-        Expert e2 = new Expert(2);
-        Expert e3 = new Expert(3);
-        e1.setIsLeader(true);
-        leader = e1;
-        experts.add(e1);
+        Expert eL = new Expert("eL");
+        Expert e2 = new Expert("e2");
+        Expert e3 = new Expert("e3");
+        Expert e4 = new Expert("e4");
+        eL.setIsLeader(true);
+        leader = eL;
+        experts.add(eL);
         experts.add(e2);
         experts.add(e3);
-        communications.add(new Communication(e1, e2, 3));
-        communications.add(new Communication(e1, e3, 2));
+        experts.add(e4);
+        communications.add(new Communication(eL, e2, 3));
+        communications.add(new Communication(e2, e3, 2));
+        communications.add(new Communication(e2, e4, 4));
         Skill s1 = new Skill();
         Skill s2 = new Skill();
         Skill s3 = new Skill();
-        e1.addSkill(s1);
-        e1.addSkill(s2);
-        e2.addSkill(s3);
-        e3.addSkill(s2);
-        e3.addSkill(s3);
+        Skill s4 = new Skill();
+        Skill sL = new Skill();
+        eL.addSkill(sL);
+        e2.addSkill(s1);
+        Skill[] e3Skills = {s1, s2};
+        e3.addSkills(e3Skills);
+        Skill[] e4Skills = {s3, s4};
+        e4.addSkills(e4Skills);
         requiredSkills.add(s1);
         requiredSkills.add(s2);
+        requiredSkills.add(s3);
+        requiredSkills.add(s4);
+        requiredSkills.add(sL);
+
     }
 }
